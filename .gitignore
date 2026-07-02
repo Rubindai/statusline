@@ -1,0 +1,9 @@
+# Runtime cost cache + locks (created under ~/.claude by install; never part of the repo)
+cache/
+*.bak
+*.bak.*
+*.tmp
+
+# OS cruft
+.DS_Store
+Thumbs.db
