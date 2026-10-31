@@ -129,7 +129,8 @@ eval "$(jq -r "$JQ" <<<"$input")"
 
 # ---- helpers (results go to REPLY / globals to avoid subshell forks) -----------------------------
 usd() { # usd <number> -> REPLY: "4.20", or "186" from $100 up; returns 1 if not a number
-  case $1 in ''|*[!0-9.eE+-]*) REPLY=''; return 1 ;; esac
+  case $1 in *[0-9]*) ;; *) REPLY=''; return 1 ;; esac             # "-" = unknown in the cost cache
+  case $1 in *[!0-9.eE+-]*) REPLY=''; return 1 ;; esac
   if [ "${1%%.*}" -ge 100 ] 2>/dev/null; then printf -v REPLY '%.0f' "$1"; else printf -v REPLY '%.2f' "$1"; fi
 }
 meter() { # meter <colored label> <int pct> <cells> -> REPLY: "label ▰▰▱▱ N%" + severity mark

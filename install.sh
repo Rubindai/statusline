@@ -49,8 +49,8 @@ fi
 
 # The branch icon is a Powerline symbol (U+E0A0). Where fontconfig exists, check that some Powerline or
 # Nerd font provides it (CJK fonts also use that private-use code point, for unrelated characters).
-if command -v fc-list >/dev/null 2>&1 &&
-   ! fc-list ':charset=e0a0' family 2>/dev/null | grep -Eq '[Pp]owerline|Nerd Font| NF'; then
+fonts=$(fc-list ':charset=e0a0' family 2>/dev/null || true)     # captured: no SIGPIPE under pipefail
+if command -v fc-list >/dev/null 2>&1 && ! printf '%s\n' "$fonts" | grep -Eq '[Pp]owerline|Nerd Font| NF'; then
   note "no Powerline/Nerd font here, so the branch icon may show as a box. See 'Fonts' in the README,"
   note "  or use STATUSLINE_ASCII=1. (The font that counts is on the computer displaying the terminal.)"
 fi
@@ -71,8 +71,11 @@ fetch() { # fetch <file>
 mkdir -p "$DEST/cache"
 fetch statusline-command.sh
 fetch cost-refresh.sh
-# Drop state from earlier versions: their cost cache could include other agents' spend.
-rm -f "$DEST/cache/cost" "$DEST/cache/.cost.lock" "$DEST/cache/.cost.flock"
+# Drop state from earlier versions, whose cost cache (fewer than six fields) could include other
+# agents' spend. A current cache is kept, so a re-install doesn't force a full re-read of the week.
+cached6=''; [ -r "$DEST/cache/cost" ] && read -r _ _ _ _ _ cached6 _ <"$DEST/cache/cost" || true
+[ -n "$cached6" ] || rm -f "$DEST/cache/cost"
+rm -f "$DEST/cache/.cost.lock" "$DEST/cache/.cost.flock"
 rm -rf "$DEST/cache/.cost.lock.d"
 
 # ---- merge settings.json --------------------------------------------------------------------------

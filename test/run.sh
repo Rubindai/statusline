@@ -152,6 +152,9 @@ check "today from before midnight is hidden" eval 'lacks today && has "\$2.50 we
 printf 'x y z\n' >"$H/.claude/statusline/cache/cost"
 render full
 check "corrupt cache is ignored" eval 'clean && lacks today && lacks week'
+printf -- '- - %s %s %s -\n' "$NOW" "$((WR - 604800))" "$((NOW + 3600))" >"$H/.claude/statusline/cache/cost"
+render full
+check "'-' (unknown) figures are skipped without errors" eval 'clean && lacks today && lacks week'
 
 echo "renderer: background refresh scheduling"
 newhome
@@ -234,6 +237,11 @@ check "scripts installed executable; stale cost cache cleared" eval '[ -x "$H/.c
 # shellcheck disable=SC2088  # the point: a shell expands ~ in the configured command
 OUT=$(HOME="$H" sh -c '~/.claude/statusline/statusline-command.sh </dev/null')
 check "the configured command runs through a shell (~ expands)" eval '[ -n "$OUT" ]'
+# own home: the first install's background refresh may still be writing to the other one
+newhome; CUR="1 2 $NOW $(rolling) $((NOW + 3600)) 0.5"   # fresh, so the smoke-test render starts no refresh
+echo "$CUR" >"$H/.claude/statusline/cache/cost"
+HOME="$H" PATH="$S:$PATH" bash "$ROOT/install.sh" >/dev/null 2>&1; OUT=$(cat "$H/.claude/statusline/cache/cost")
+check "re-install keeps a current-format cost cache" eval '[ "$OUT" = "$CUR" ]'
 newhome
 printf '{"statusLine": {"type": "command", "command": "~/old.sh", "padding": 2, "hideVimModeIndicator": true, "refreshInterval": 10}}\n' >"$H/.claude/settings.json"
 HOME="$H" PATH="$S:$PATH" bash "$ROOT/install.sh" >/dev/null 2>&1; OUT=$(jq -cS .statusLine "$H/.claude/settings.json")
