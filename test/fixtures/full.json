@@ -1,0 +1,47 @@
+{
+  "cwd": "/home/user/dev/statusline",
+  "session_id": "abc123",
+  "session_name": "my-session",
+  "prompt_id": "550e8400-e29b-41d4-a716-446655440000",
+  "transcript_path": "/path/to/transcript.jsonl",
+  "model": { "id": "claude-opus-5-5", "display_name": "Opus 5.5" },
+  "workspace": {
+    "current_dir": "/home/user/dev/statusline",
+    "project_dir": "/home/user/dev/statusline",
+    "added_dirs": [],
+    "repo": { "host": "github.com", "owner": "anthropics", "name": "claude-code" }
+  },
+  "version": "2.1.316",
+  "output_style": { "name": "Explanatory" },
+  "cost": {
+    "total_cost_usd": 4.2,
+    "total_duration_ms": 2400000,
+    "total_api_duration_ms": 1080000,
+    "total_lines_added": 320,
+    "total_lines_removed": 140
+  },
+  "context_window": {
+    "total_input_tokens": 340000,
+    "total_output_tokens": 1200,
+    "context_window_size": 1000000,
+    "used_percentage": 34,
+    "remaining_percentage": 66,
+    "current_usage": { "input_tokens": 8500, "output_tokens": 1200, "cache_creation_input_tokens": 5000, "cache_read_input_tokens": 326500 }
+  },
+  "exceeds_200k_tokens": true,
+  "prompt_cache": {
+    "warm": true, "caching_observed": true, "ttl": "1h", "expires_at": "@NOW+2610",
+    "requests": 14, "misses": 2, "expected_rebuilds": 1, "hit_ratio": 0.91,
+    "cache_write_tokens": 352000, "miss_recache_tokens": 310200, "last_miss_at": null,
+    "last_miss_cause": null, "miss_causes": {}, "recache_tokens_if_cold": 45000
+  },
+  "fast_mode": true,
+  "effort": { "level": "max" },
+  "thinking": { "enabled": true },
+  "rate_limits": {
+    "five_hour": { "used_percentage": 41.2, "resets_at": "@NOW+8190" },
+    "seven_day": { "used_percentage": 58.4, "resets_at": "@NOW+178200" }
+  },
+  "vim": { "mode": "NORMAL" },
+  "pr": { "number": 1234, "url": "https://github.com/anthropics/claude-code/pull/1234", "review_state": "pending" }
+}
