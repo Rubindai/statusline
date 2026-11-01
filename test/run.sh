@@ -221,7 +221,14 @@ check "unexpected JSON shape is rejected" eval 'case $OUT in "5 - "*) true ;; *)
 newhome; mkdir -p "$H/.local/bin" "$T/stubs-nocc"; cp "$S/ccusage" "$H/.local/bin/"; cp "$S/npx" "$S/bunx" "$T/stubs-nocc/"
 env -i HOME="$H" PATH="$T/stubs-nocc:/usr/local/bin:/usr/bin:/bin" ${TZ:+TZ="$TZ"} STUB_JSON="$CJ" bash "$C" "$WIN"
 readcache "$H/.claude/statusline/cache/cost"
-check "finds a standalone ccusage in ~/.local/bin when it isn't on PATH" eval '[ "$t $w" = "1.125 13.875" ]'
+check "finds ccusage under an npm prefix of ~/.local when it isn't on PATH" eval '[ "$t $w" = "1.125 13.875" ]'
+# npm global under fnm: the newest Node by version order (v24 > v9) wins, even with v9 sorting later as text
+newhome; F="$H/.local/share/fnm/node-versions"
+mkdir -p "$F/v9.0.0/installation/bin" "$F/v24.14.0/installation/bin"
+cp "$S/ccusage" "$F/v24.14.0/installation/bin/"; cp "$S/npx" "$F/v9.0.0/installation/bin/ccusage"
+env -i HOME="$H" PATH="$T/stubs-nocc:/usr/local/bin:/usr/bin:/bin" ${TZ:+TZ="$TZ"} STUB_JSON="$CJ" bash "$C" "$WIN"
+readcache "$H/.claude/statusline/cache/cost"
+check "finds a global npm install under the newest fnm Node" eval '[ "$t $w" = "1.125 13.875" ]'
 
 # ---------------------------------------------------------------------------------------------------
 echo "install / uninstall"

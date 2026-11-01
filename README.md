@@ -58,22 +58,19 @@ today/week figures are.
 
 ### Installing ccusage
 
-Since v20, ccusage is a self-contained native program; the npm package is just a launcher for it.
-Either of these works:
+```sh
+npm install -g ccusage@latest
+```
 
-- **With npm:** `npm install -g ccusage@latest`.
-- **Without npm or Node:** put the native binary in `~/.local/bin`. The status line searches there even
-  when Claude Code was started with a minimal PATH. On Linux x64:
-  ```sh
-  url=$(curl -fsSL https://registry.npmjs.org/@ccusage/ccusage-linux-x64/latest | jq -r .dist.tarball)
-  mkdir -p ~/.local/bin && curl -fsSL "$url" | tar -xzO package/bin/ccusage > ~/.local/bin/ccusage
-  chmod +x ~/.local/bin/ccusage && ~/.local/bin/ccusage --version
-  ```
-  For other platforms, swap `linux-x64` for `linux-arm64`, `darwin-arm64`, `darwin-x64`, `win32-x64` or
-  `win32-arm64`.
+It needs [Node.js](https://nodejs.org); run the same command to update. If Claude Code was started with a
+minimal PATH (from a desktop launcher, say), the status line still finds a global install made through
+fnm, nvm, Volta, asdf, nodenv, pnpm or Homebrew, or into an npm prefix of `~/.npm-global` or `~/.local`.
 
-If neither is installed but `npx` or `bunx` is, each refresh fetches ccusage through them, which is
-slower.
+With fnm or nvm, a global package belongs to one Node version: after switching to a new Node, run the
+install again.
+
+If ccusage isn't installed but `npx` or `bunx` is, each refresh fetches ccusage through them. That works,
+but it's slower and needs the network.
 
 ### Fonts
 

@@ -32,19 +32,18 @@ case $REFRESH in *[!0-9]*) die "STATUSLINE_REFRESH must be a whole number of sec
 command -v jq  >/dev/null 2>&1 || die "jq is required (https://jqlang.org). Install it and re-run."
 command -v git >/dev/null 2>&1 || note "git not found: the branch segment stays hidden."
 ccu=$(command -v ccusage 2>/dev/null || true)
-[ -z "$ccu" ] && [ -x "$HOME/.local/bin/ccusage" ] && ccu="$HOME/.local/bin/ccusage"
 if [ -n "$ccu" ]; then
   v=$("$ccu" --version 2>/dev/null | grep -Eo '[0-9]+(\.[0-9]+)+' | head -n 1 || true)
   if [ -z "$v" ] || [ "${v%%.*}" -lt 20 ] 2>/dev/null; then
     note "ccusage ${v:-(unknown version)} at $ccu is too old; today/week cost needs ccusage >= 20."
-    note "  upgrade it (npm install -g ccusage@latest, or a newer native binary; see the README)."
+    note "  upgrade it: npm install -g ccusage@latest"
   fi
 elif command -v npx >/dev/null 2>&1 || command -v bunx >/dev/null 2>&1; then
   note "ccusage is not installed, so each cost refresh fetches it through npx/bunx."
-  note "  for faster, offline-friendly refreshes: npm install -g ccusage"
+  note "  for faster, offline-friendly refreshes: npm install -g ccusage@latest"
 else
   note "ccusage not found: today/week cost stays hidden; everything else works."
-  note "  without npm, install its native binary into ~/.local/bin (see 'Installing ccusage' in the README)."
+  note "  to enable it, install Node.js (https://nodejs.org), then: npm install -g ccusage@latest"
 fi
 
 # The branch icon is a Powerline symbol (U+E0A0). Where fontconfig exists, check that some Powerline or

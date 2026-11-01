@@ -19,8 +19,8 @@
 #            <today_usd> <window_usd> <computed_at> <window_start> <next_local_midnight> <before_today_usd>
 #          A usd field is "-" while unknown.
 #
-# Needs ccusage >= 20: the native binary on PATH or in ~/.local/bin, a global npm install, or
-# fetched on demand through bunx/npx. Exits 0 quietly on any failure, keeping still-valid figures.
+# Needs ccusage >= 20, installed with `npm install -g ccusage@latest` (or fetched on demand through
+# bunx/npx). Exits 0 quietly on any failure, keeping still-valid figures.
 set -u
 DIR="$HOME/.claude/statusline/cache"
 CACHE="$DIR/cost"
@@ -74,8 +74,9 @@ put "$keep_t" "$keep_w" "$past"
 if [ "$past" != - ]; then since=$(ymd "$now" %Y%m%d) || exit 0
 else since=$(ymd "$(( win - 86400 ))" %Y%m%d) || exit 0; fi
 
-# ---- find ccusage. Claude Code launched from a desktop/GUI gets a minimal PATH, so append the usual
-#      install locations (after the user's own PATH, which keeps precedence). ---------------------------
+# ---- find ccusage. Claude Code launched from a desktop/GUI gets a minimal PATH, so append where a
+#      global npm install lands: npm prefixes, the newest fnm/nvm Node, other version managers, and
+#      Homebrew (after the user's own PATH, which keeps precedence). ------------------------------------
 shopt -s nullglob
 newest() { [ $# -gt 0 ] && printf '%s\n' "$@" | { sort -V 2>/dev/null || sort; } | tail -n 1; }
 for d in \
